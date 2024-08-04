@@ -1,0 +1,14 @@
+[centos]
+server1     ansible_host=192.168.56.111 
+
+[ubuntu]
+server2     ansible_host=192.168.56.112
+
+
+[database]
+server2
+
+[linux:children]
+centos
+ubuntu
+

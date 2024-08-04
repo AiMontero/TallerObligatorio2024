@@ -1,0 +1,26 @@
+---
+- name: Hardening de servidores
+  hosts: centos
+  become: true
+  user: sysadmin
+
+  tasks:
+  - name: Configuro opciones de seguridad para ssh
+    ansible.builtin.lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^#PermitRootLogin'
+      line: PermitRootLogin no
+    notify: Reinicio servidor ssh
+    register: results_sshd
+
+  - name: Ver resultado de la tarea anterior
+    ansible.builitn.debug:
+      var: results_sshd    
+ 
+  handlers:
+
+  - name: Reincio el servidor ssh
+    ansible.builtin.systemd_service:
+      name: sshd
+      state: restarted
+  
