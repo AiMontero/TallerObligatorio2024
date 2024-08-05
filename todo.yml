@@ -1,0 +1,28 @@
+---
+- name: Configuracion de CentOS
+  hosts: server1
+  become: true
+  ansible_user: sysadmin
+
+  tasks:
+    
+
+- name: Configurar aplicación ToDo
+  hosts: server1
+  become: true
+
+  tasks:
+    
+    - name: Copiar archivo WAR de la aplicación todo
+      ansible.builtin.copy:
+        src: /home/sysadmin/Downloads/todo.war
+        dest: /opt/tomcat/webapps/todo.war
+        owner: tomcat
+        group: tomcat
+        mode: '0644'
+
+    - name: Reiniciar Tomcat
+      ansible.builtin.systemd:
+        name: tomcat
+        state: restarted
+
