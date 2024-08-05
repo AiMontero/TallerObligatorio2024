@@ -5,7 +5,7 @@ Instalación
 Durante el proceso de configuración de nuestro ambiente virtual,tuvimos que ejecutar una cantidad de comandos para la instalación de modulos especificos para hacer funcionar todo correctamente
 
 Configuración General
-# Configuramos la IP fija en maquinas
+# Configuraciones Generales
 #Update 
 #Upgrade
 #Llaves SSH-keygen en GitHub
