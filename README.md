@@ -5,10 +5,13 @@ Instalación
 Se hizo uso e instalación de Git y Ansible para poder llevar a cabo el proceso de automatismos deseados.
 
 Configuración General de Playbooks
+
 #Hardening.yml
 
 -Configuracion de app ToDo en Ubuntu
+
 -Copiar archivo WAR de la aplicacion todo
+
 -Reiniciar tomcat
 
 #database.yml
