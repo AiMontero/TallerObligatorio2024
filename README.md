@@ -6,11 +6,13 @@ Se hizo uso e instalación de Git y Ansible para poder llevar a cabo el proceso 
 
 Configuración General de Playbooks
 #Hardening.yml
+
 -Configuracion de app ToDo en Ubuntu
 -Copiar archivo WAR de la aplicacion todo
 -Reiniciar tomcat
 
 #database.yml
+
 - Instalar pyMysql para soporte MYsql/mariaDB en Python
 - Cambiar la configuracion para escuchar en todas las interfases de red
 - Habilitamos en ufw la conexion a mariadb
@@ -19,7 +21,7 @@ Configuración General de Playbooks
 - Reiniiciar MariaDB
 
 #tomcat.yml
-- Configurar ToDo
+- Configurar Todo
 - Actualizar lista de paquetes
 - Instalar Java
 - Descargar Tomcat
@@ -34,6 +36,7 @@ Configuración General de Playbooks
 
 
 #ufwmariadb
+
 -Configurar el firewall para MariaDB
 -UFW instalado
 - Permitir puerto 22 en ufw
@@ -47,20 +50,24 @@ Configuración General de Playbooks
 - Reiniciar MariaDB
 
 #todo.yml
+
 - Configurar todo en ubuntu
 - Copiar archivo war de app todo
 - Reiniciar tomcat
 
 Archivo files:
+
 -todo.sql
 -virtualhost.conf
 
 Archivo inventory:
+
 hardening.yml
 servidores.toml
 group_vars
 
 Archivo templates:
+
 app.properties.j2
 containerfile.j2
 index.j2
