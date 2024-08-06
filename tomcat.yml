@@ -1,44 +1,72 @@
 ---
-- name: Instalar Tomcat
-  hosts: tomcat_servers
+- name: Configurar ToDo en Ubuntu
+  hosts: server2
   become: true
-  
-tasks:
-   
-    - name: Instalar Java 
-      ansible.builtin.package:
-        name: java-11-openjdk-devel
+  remote_user: sysadmin
+
+  tasks:
+    - name: Actualizar lista de paquetes
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Instalar Java
+      ansible.builtin.apt:
+        name: openjdk-11-jdk
         state: present
 
     - name: Descargar Tomcat
-      get_url:
+      ansible.builtin.get_url:
         url: "https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.54/bin/apache-tomcat-9.0.54.tar.gz"
-        dest: /opt/tomcat
-   
+        dest: /tmp/apache-tomcat-9.0.54.tar.gz
+
+    - name: Crear directorio de instalación de Tomcat
+      ansible.builtin.file:
+        path: /opt/tomcat
+        state: directory
+        owner: tomcat
+        group: tomcat
+        mode: '0755'
+
     - name: Extraer Tomcat
-      unarchive:
-        src: /opt/apache-tomcat-9.0.54.tar.gz
+      ansible.builtin.unarchive:
+        src: /tmp/apache-tomcat-9.0.54.tar.gz
         dest: /opt/tomcat
         remote_src: true
 
-    #crear link simbólico a /opt/tomcat
-    #crear directorio /opt/tomcat
-    - name: Configurar archivo de propiedades de la aplicación
-      template: templates/index.j2
-        src: templates/app.properties.j2
-        dest: /opt/tomcat/app.properties
-        owner: root
-        group: root
-        mode: 0644
+    - name: Configurar permisos para Tomcat
+      ansible.builtin.file:
+        path: /opt/tomcat/apache-tomcat-9.0.54
+        state: directory
+        recurse: true
+        owner: tomcat
+        group: tomcat
+        mode: '0755'
+    - name: Recargar systemd para incluir Tomcat
+      ansible.builtin.systemd:
+        daemon_reload: true
 
-    - name: Habilitamos el servicio Tomcat en Systemd
+    - name: Iniciar y habilitar servicio Tomcat
       ansible.builtin.systemd:
         name: tomcat
-        state: started
         enabled: true
- 
-    - name: Abrir los puertos en el Firewall para el Tomcat
-      ansible.posix.firewalld:
-        port: 8080  
-        permanent: true
-        state: enabled
+        state: started
+
+    - name: Instalar MariaDB
+      ansible.builtin.apt:
+        name: mariadb-server
+        state: present
+
+    - name: Copiar archivo WAR de la aplicación todo
+      ansible.builtin.copy:
+        src: /home/sysadmin/Downloads/todo.war
+        dest: /opt/tomcat/apache-tomcat-9.0.54/webapps/todo.war
+        owner: tomcat
+        group: tomcat
+        mode: '0644'
+      notify: Reiniciar Tomcat
+
+  handlers:
+    - name: Reiniciar Tomcat
+      ansible.builtin.systemd:
+        name: tomcat
+        state: restarted
